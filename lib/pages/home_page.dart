@@ -14,12 +14,16 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<dynamic>? trendingMovies;
   List<dynamic>? popularMovies;
+  List<dynamic>? nowPlayingMovies;
+  List<dynamic>? topRatedMovies;
 
   @override
   void initState() {
     super.initState();
     getTrendingMovies();
     getPopularMovies();
+    getNowPlayingMovies();
+    getTopratedMovies();
   }
 
   void getTrendingMovies() async {
@@ -43,6 +47,32 @@ class _HomeState extends State<Home> {
     final List<dynamic> moviesData = jsonDecode(response.body)['results'];
     setState(() {
       popularMovies = moviesData; // update state and rebuild
+    });
+  }
+
+  void getNowPlayingMovies() async {
+    Response response = await get(
+      Uri.parse(
+        'https://api.themoviedb.org/3/movie/now_playing?api_key=${dotenv.env['API_KEY']}',
+      ),
+    );
+    final List<dynamic> moviesData = jsonDecode(response.body)['results'];
+
+    setState(() {
+      nowPlayingMovies = moviesData;
+    });
+  }
+
+  void getTopratedMovies() async {
+    Response response = await get(
+      Uri.parse(
+        'https://api.themoviedb.org/3/movie/top_rated?api_key=${dotenv.env['API_KEY']}',
+      ),
+    );
+    final List<dynamic> moviesData = jsonDecode(response.body)['results'];
+
+    setState(() {
+      topRatedMovies = moviesData;
     });
   }
 
@@ -73,6 +103,24 @@ class _HomeState extends State<Home> {
                 : HorizontalScrollMoviesCard(
                     movieList: popularMovies!,
                     title: 'Popular Movies',
+                  ),
+            nowPlayingMovies == null
+                ? SizedBox(
+                    height: 275,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : HorizontalScrollMoviesCard(
+                    movieList: nowPlayingMovies!,
+                    title: 'Now Playing',
+                  ),
+            topRatedMovies == null
+                ? SizedBox(
+                    height: 275,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : HorizontalScrollMoviesCard(
+                    movieList: topRatedMovies!,
+                    title: 'Top Rated',
                   ),
           ],
         ),
