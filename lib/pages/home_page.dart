@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import '../movie_card.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
-import 'package:more/movie.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:more/horizontal_scroll_movies_card.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -62,72 +61,18 @@ class _HomeState extends State<Home> {
                     height: 275,
                     child: Center(child: CircularProgressIndicator()),
                   )
-                : Card(
-                    elevation: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('Trendig Now'),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: trendingMovies!.map((data) {
-                              return Container(
-                                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: MovieCard(
-                                  movie: Movie(
-                                    title: data['title'],
-                                    imageUrl:
-                                        'https://image.tmdb.org/t/p/w500${data['poster_path']}',
-                                    rating: data['vote_average'],
-                                    overview: data['overview'] ?? '',
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ],
-                    ),
+                : HorizontalScrollMoviesCard(
+                    movieList: trendingMovies!,
+                    title: 'Trending Now',
                   ),
             popularMovies == null
                 ? SizedBox(
                     height: 275,
                     child: Center(child: CircularProgressIndicator()),
                   )
-                : Card(
-                    elevation: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('Popular Movies'),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: popularMovies!.map((data) {
-                              return Container(
-                                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: MovieCard(
-                                  movie: Movie(
-                                    title: data['title'],
-                                    imageUrl:
-                                        'https://image.tmdb.org/t/p/w500${data['poster_path']}',
-                                    rating: data['vote_average'],
-                                    overview: data['overview'] ?? '',
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ],
-                    ),
+                : HorizontalScrollMoviesCard(
+                    movieList: popularMovies!,
+                    title: 'Popular Movies',
                   ),
           ],
         ),
