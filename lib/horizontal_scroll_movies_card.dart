@@ -19,36 +19,34 @@ class HorizontalScrollMoviesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(title ?? ''),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: movieList.map((data) {
-                return Container(
-                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: MovieCard(
-                    movie: Movie(
-                      title: data['title'],
-                      imageUrl:
-                          'https://image.tmdb.org/t/p/w500${data['poster_path']}',
-                      rating: data['vote_average'],
-                      overview: data['overview'] ?? '',
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          child: Text(title ?? ''),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: movieList.map((data) {
+              return Container(
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: MovieCard(
+                  movie: Movie(
+                    title: data['title'],
+                    imageUrl:
+                        'https://image.tmdb.org/t/p/w500${data['poster_path']}',
+                    rating: data['vote_average'],
+                    overview: data['overview'] ?? '',
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            }).toList(),
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 20),
+      ],
     );
   }
 }
