@@ -86,6 +86,7 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 10),
             trendingMovies == null
                 ? SizedBox(
                     height: 275,
