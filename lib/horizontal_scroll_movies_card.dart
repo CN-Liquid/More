@@ -39,6 +39,7 @@ class HorizontalScrollMoviesCard extends StatelessWidget {
                         'https://image.tmdb.org/t/p/w500${data['poster_path']}',
                     rating: data['vote_average'],
                     overview: data['overview'] ?? '',
+                    id: data['id'],
                   ),
                 ),
               );

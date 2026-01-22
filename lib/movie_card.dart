@@ -10,7 +10,7 @@ class MovieCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/movie_page', arguments: movie);
+        Navigator.pushNamed(context, '/movie_page', arguments: movie.id);
       },
       child: Card(
         elevation: 3,
@@ -21,7 +21,7 @@ class MovieCard extends StatelessWidget {
             width: 275 * 2 / 3,
             child: Column(
               children: <Widget>[
-                Image.network(height: 275, movie.imageUrl),
+                Image.network(height: 275, movie.imageUrl!),
                 Row(
                   children: <Widget>[
                     Expanded(

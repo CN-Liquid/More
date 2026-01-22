@@ -61,6 +61,7 @@ class _SearchState extends State<Search> {
                                   : 'https://www.content.numetro.co.za/ui_images/no_poster.png',
                               rating: data['vote_average'],
                               overview: data['overview'] ?? '',
+                              id: data['id'],
                             ),
                           );
                         }).toList(),
