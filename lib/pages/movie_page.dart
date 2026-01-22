@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:more/movie.dart';
 
+//TODO : Incorporate more data from the TMDB api
+
 class MoviePage extends StatelessWidget {
   const MoviePage({super.key});
 
