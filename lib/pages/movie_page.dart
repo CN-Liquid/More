@@ -52,6 +52,8 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
+    double parentWidth = MediaQuery.of(context).size.width;
+    double backdropHeight = (parentWidth * 9 / 16).clamp(0, 500);
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.grey, title: Text('MovieDetails')),
       body: Container(
@@ -61,44 +63,35 @@ class _MoviePageState extends State<MoviePage> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: 500,
-                      maxWidth: MediaQuery.of(context).size.width,
-                    ),
-                    child: SizedBox(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double parentWidth = constraints.maxWidth;
-                          double backdropHeight = parentWidth * 9 / 16;
-                          return Stack(
-                            children: [
-                              Image.network(
-                                height: backdropHeight,
+                  SizedBox(
+                    height: backdropHeight,
+                    width: parentWidth,
+                    child: Stack(
+                      children: [
+                        Image.network(
+                          movie!.backdropUrl!,
+                          height: backdropHeight,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topLeft,
+                          width: parentWidth,
+                        ),
+                        Positioned(
+                          top: backdropHeight * 0.1,
+                          left: 20,
+                          child: SizedBox(
+                            height: backdropHeight * 0.8,
+                            child: AspectRatio(
+                              aspectRatio:
+                                  2 /
+                                  3, // Forces the width to scale with height
+                              child: Image.network(
+                                movie!.imageUrl!,
                                 fit: BoxFit.cover,
-                                alignment: Alignment.topLeft,
-                                width: parentWidth,
-                                movie!.backdropUrl!,
                               ),
-                              Positioned(
-                                top: 15, // Hardcoded 20px from top
-                                bottom:
-                                    15, // Hardcoded 20px from bottom (Keeps it inside)
-                                left: 20, // Hardcoded 20px from left
-                                child: AspectRatio(
-                                  aspectRatio:
-                                      2 /
-                                      3, // Forces the width to scale with height
-                                  child: Image.network(
-                                    movie!.imageUrl!,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Text(
@@ -106,14 +99,13 @@ class _MoviePageState extends State<MoviePage> {
                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(
-                        child: Row(
+                      Icon(Icons.star),
+                      Text('${movie!.rating}'),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Wrap(
                           children: <Widget>[
-                            Icon(Icons.star),
-                            Text('${movie!.rating}'),
-                            SizedBox(width: 20),
                             Text('Genre : '),
                             ...movie!.genres!.map((genres) {
                               return Text('${genres['name']} ');
