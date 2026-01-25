@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:more/movie.dart';
@@ -60,46 +61,71 @@ class _MoviePageState extends State<MoviePage> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Image.network(movie!.backdropUrl!),
-                  SizedBox(
-                    height: 275,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Image.network(width: 2 * 275 / 3, movie!.imageUrl!),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            textAlign: TextAlign.start,
-                            movie!.overview!,
-                          ),
-                        ),
-                      ],
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 500,
+                      maxWidth: MediaQuery.of(context).size.width,
+                    ),
+                    child: SizedBox(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double parentWidth = constraints.maxWidth;
+                          double backdropHeight = parentWidth * 9 / 16;
+                          return Stack(
+                            children: [
+                              Image.network(
+                                height: backdropHeight,
+                                fit: BoxFit.cover,
+                                alignment: Alignment.topLeft,
+                                width: parentWidth,
+                                movie!.backdropUrl!,
+                              ),
+                              Positioned(
+                                top: 15, // Hardcoded 20px from top
+                                bottom:
+                                    15, // Hardcoded 20px from bottom (Keeps it inside)
+                                left: 20, // Hardcoded 20px from left
+                                child: AspectRatio(
+                                  aspectRatio:
+                                      2 /
+                                      3, // Forces the width to scale with height
+                                  child: Image.network(
+                                    movie!.imageUrl!,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  Text(
+                    movie!.title,
+                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+                  ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          SizedBox(
-                            width: 2 * 275 / 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(movie!.title),
-                                Text('${movie!.rating}'),
-                              ],
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.star),
+                            Text('${movie!.rating}'),
+                            SizedBox(width: 20),
+                            Text('Genre : '),
+                            ...movie!.genres!.map((genres) {
+                              return Text('${genres['name']} ');
+                            }),
+                          ],
+                        ),
                       ),
-                      SizedBox(width: 10),
-                      ...movie!.genres!.map((genres) {
-                        return Text('${genres['name']} ');
-                      }),
                     ],
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: Text(textAlign: TextAlign.start, movie!.overview!),
                   ),
                 ],
               ),
